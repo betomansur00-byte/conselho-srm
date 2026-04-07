@@ -302,7 +302,7 @@ textarea{width:100%;border:none;outline:none;padding:13px 14px;font-size:13px;fo
 // ═══════════════════════════════════════════
 const SUPABASE_URL = 'https://brkdicumdlfhfajoucov.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJya2RpY3VtZGxmaGZham91Y292Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NjY2MzAsImV4cCI6MjA5MTE0MjYzMH0.SEhjYAJ61EGWjKIjBm3HYUx3DesDUd0xsRxhBjliF7Q';
-const API_KEY = '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';
+const PROXY_URL = 'https://conselho-srm.vercel.app/api/proxy';
 
 const PERSONAS = {
   ae:{name:'André Esteves',role:'BTG Pactual · M&A e mercados',av:'av-ae',i:'AE',
@@ -684,9 +684,9 @@ async function callMember(id, allSources, vertente){
     else content.push({type:'text',text:`[Fonte de análise]\n${s.content}`});
   });
   content.push({type:'text',text:'Analise todas as fontes acima com a sua perspectiva e retorne o JSON solicitado.'});
-  const r=await fetch("https://api.anthropic.com/v1/messages",{
+  const r=await fetch(PROXY_URL,{
     method:"POST",
-    headers:{"Content-Type":"application/json","x-api-key":API_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    headers:{"Content-Type":"application/json"},
     body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1200,system:p.sys,messages:[{role:"user",content}]})
   });
   const d=await r.json();
@@ -698,9 +698,9 @@ async function callMember(id, allSources, vertente){
 
 async function callSynth(results){
   const s=Object.entries(results).map(([id,r])=>`${PERSONAS[id].name}: ${r.veredicto}`).join('. ');
-  const r=await fetch("https://api.anthropic.com/v1/messages",{
+  const r=await fetch(PROXY_URL,{
     method:"POST",
-    headers:{"Content-Type":"application/json","x-api-key":API_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    headers:{"Content-Type":"application/json"},
     body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:400,
       system:"Secretário do conselho. Sintetize as posições em 2-3 frases destacando convergências e divergências. Direto. Português do Brasil.",
       messages:[{role:"user",content:`Posições: ${s}\n\nSíntese:`}]})
