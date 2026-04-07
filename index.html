@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Conselho SRM</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh}
@@ -373,12 +374,10 @@ const SB = {
     return r.json();
   },
   async insert(name, sources){
-    // strip b64 from PDFs before saving to DB (too large) — save metadata only
-    const slim = sources.map(s => s.type==='pdf' ? {...s, b64:null} : s);
     const r = await fetch(`${SUPABASE_URL}/rest/v1/vertentes`, {
       method:'POST',
       headers:{...this.headers, 'Prefer':'return=representation'},
-      body: JSON.stringify({name, sources: slim})
+      body: JSON.stringify({name, sources})
     });
     if(!r.ok){const e=await r.json();throw new Error(e.message||'Erro ao salvar');}
     const data = await r.json();
@@ -502,12 +501,11 @@ async function saveVertente(){
 
   const vsources=[];
   if(text) vsources.push({id:1,type:'text',label:text.slice(0,60)+(text.length>60?'…':''),content:text,status:'ok'});
-  pdfs.forEach((f,i)=>vsources.push({id:i+2,type:'pdf',label:f.name,b64:f.b64,size:f.size,status:'ok'}));
+  pdfs.forEach((f,i)=>vsources.push({id:i+2,type:'pdf',label:f.name,content:`[PDF: ${f.name}]\n${f.text||'(sem texto extraído)'}`,size:f.size,status:'ok'}));
 
   showLoading('Salvando vertente...');
   try{
     const saved=await SB.insert(name,vsources);
-    // keep b64 in memory for this session
     saved.sources=vsources;
     vertentes.push(saved);
     toggleCreateForm(false);
@@ -527,15 +525,31 @@ function setupVPdfDrop(){
 }
 setupVPdfDrop();
 
+async function extractPdfText(file){
+  if(!window.pdfjsLib){throw new Error('pdf.js não carregou');}
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const ab=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+  let text='';
+  for(let i=1;i<=pdf.numPages;i++){
+    const page=await pdf.getPage(i);
+    const tc=await page.getTextContent();
+    text+=tc.items.map(x=>x.str).join(' ')+'
+';
+  }
+  return text.trim();
+}
+
 function handleVPdfs(e){
-  Array.from(e.target.files).forEach(f=>{
+  Array.from(e.target.files).forEach(async f=>{
     if((window._vPendingPdfs||[]).find(p=>p.name===f.name))return;
-    const entry={name:f.name,size:f.size,b64:null,status:'loading'};
+    const entry={name:f.name,size:f.size,text:null,status:'loading'};
     window._vPendingPdfs.push(entry);renderVPdfList();
-    const r=new FileReader();
-    r.onload=ev=>{entry.b64=ev.target.result.split(',')[1];entry.status='ok';renderVPdfList();};
-    r.onerror=()=>{entry.status='err';renderVPdfList();};
-    r.readAsDataURL(f);
+    try{
+      entry.text=await extractPdfText(f);
+      entry.status='ok';
+    }catch(err){entry.status='err';}
+    renderVPdfList();
   });
   document.getElementById('vPdfInput').value='';
 }
@@ -577,15 +591,16 @@ function setupSessionPdfDrop(){
 setupSessionPdfDrop();
 
 function handlePDFs(e){
-  Array.from(e.target.files).forEach(f=>{
+  Array.from(e.target.files).forEach(async f=>{
     if((window._pendingPdfs||[]).find(p=>p.name===f.name))return;
-    const entry={name:f.name,size:f.size,b64:null,status:'loading'};
+    const entry={name:f.name,size:f.size,text:null,status:'loading'};
     if(!window._pendingPdfs)window._pendingPdfs=[];
     window._pendingPdfs.push(entry);updatePdfDropUI();
-    const r=new FileReader();
-    r.onload=ev=>{entry.b64=ev.target.result.split(',')[1];entry.status='ok';updatePdfDropUI();};
-    r.onerror=()=>{entry.status='err';updatePdfDropUI();};
-    r.readAsDataURL(f);
+    try{
+      entry.text=await extractPdfText(f);
+      entry.status='ok';
+    }catch(err){entry.status='err';}
+    updatePdfDropUI();
   });
   document.getElementById('pdfInput').value='';
 }
@@ -606,7 +621,8 @@ function addSource(){
   const pendingPdfs=(window._pendingPdfs||[]).filter(f=>f.status==='ok');
   if(!text&&!pendingPdfs.length){alert('Escreva um texto ou adicione um PDF antes de clicar em Adicionar fonte.');return;}
   if(text){const id=++srcCounter;sources.push({id,type:'text',label:text.length>60?text.slice(0,60)+'…':text,content:text,status:'ok'});document.getElementById('promptText').value='';updateChar();}
-  pendingPdfs.forEach(f=>{const id=++srcCounter;sources.push({id,type:'pdf',label:f.name,b64:f.b64,size:f.size,status:'ok'});});
+  pendingPdfs.forEach(f=>{const id=++srcCounter;sources.push({id,type:'pdf',label:f.name,content:`[PDF: ${f.name}]
+${f.text||'(sem texto extraído)'}`,size:f.size,status:'ok'});});
   window._pendingPdfs=[];
   resetPdfDrop('pdfDrop','pdfInput',handlePDFs);
   renderSources();
@@ -673,17 +689,14 @@ function toggleM(el){
 async function callMember(id, allSources, vertente){
   const p=PERSONAS[id];
   const content=[];
+  const allText=[];
   if(vertente){
     const srcs=vertente.sources||[];
-    const vTxt=srcs.filter(s=>s.type==='text').map(s=>`[Contexto da vertente "${vertente.name}"]\n${s.content}`).join('\n\n');
-    if(vTxt) content.push({type:'text',text:vTxt});
-    srcs.filter(s=>s.type==='pdf'&&s.b64).forEach(s=>content.push({type:'document',source:{type:'base64',media_type:'application/pdf',data:s.b64},title:`[Vertente] ${s.label}`}));
+    srcs.forEach(s=>allText.push(`[Contexto da vertente "${vertente.name}"]\n${s.content||''}`));
   }
-  allSources.forEach(s=>{
-    if(s.type==='pdf') content.push({type:'document',source:{type:'base64',media_type:'application/pdf',data:s.b64},title:s.label.replace('…','')});
-    else content.push({type:'text',text:`[Fonte de análise]\n${s.content}`});
-  });
-  content.push({type:'text',text:'Analise todas as fontes acima com a sua perspectiva e retorne o JSON solicitado.'});
+  allSources.forEach(s=>allText.push(`[Fonte de análise: ${s.label}]\n${s.content||''}`));
+  allText.push('Analise todas as fontes acima com a sua perspectiva e retorne o JSON solicitado.');
+  content.push({type:'text',text:allText.join('\n\n---\n\n')});
   const r=await fetch(PROXY_URL,{
     method:"POST",
     headers:{"Content-Type":"application/json"},
