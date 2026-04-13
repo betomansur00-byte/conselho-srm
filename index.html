@@ -349,6 +349,8 @@ select.v-select{width:100%;appearance:none;-webkit-appearance:none;background:#f
 const SUPABASE_URL = 'https://brkdicumdlfhfajoucov.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJya2RpY3VtZGxmaGZham91Y292Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NjY2MzAsImV4cCI6MjA5MTE0MjYzMH0.SEhjYAJ61EGWjKIjBm3HYUx3DesDUd0xsRxhBjliF7Q';
 const PROXY_URL = 'https://conselho-srm.vercel.app/api/proxy';
+const GITHUB_REPO = 'betomansur00-byte/conselho-srm-vault';
+const GITHUB_BRANCH = 'main';
 
 const CORES = [
   {id:'blue', bg:'#B5D4F4', txt:'#0C447C'},
@@ -773,6 +775,56 @@ function fillCard(c,data){
     </div>`;
 }
 
+// ═══════════════════════════════════════════
+//  OBSIDIAN VAULT (GitHub)
+// ═══════════════════════════════════════════
+async function saveToObsidian(vertente, srcs, results, synth, names){
+  try{
+    const now = new Date();
+    const dateStr = now.toISOString().slice(0,10);
+    const timeStr = now.toTimeString().slice(0,5).replace(':','h');
+    const vertenteName = vertente ? vertente.name : 'Geral';
+    const fileName = 'Analises/' + dateStr + ' ' + timeStr + ' - ' + vertenteName + '.md';
+    let md = '# ' + vertenteName + ' - ' + dateStr + ' ' + timeStr + '\n\n';
+    md += '**Vertente:** ' + vertenteName + '\n';
+    md += '**Data:** ' + now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR') + '\n\n';
+    md += '## Fontes\n\n';
+    srcs.forEach(function(s){ md += '- **' + (s.type==='pdf'?'PDF':'Texto') + ':** ' + s.label + '\n'; });
+    md += '\n## Analise dos conselheiros\n\n';
+    Object.entries(results).forEach(function(entry){
+      var id = entry[0]; var r = entry[1];
+      var stance = r.stance==='positivo'?'Favoravel':r.stance==='negativo'?'Contrario':r.stance==='cauteloso'?'Cauteloso':'Neutro';
+      md += '### ' + names[id] + '\n\n';
+      md += '**Posicao:** ' + stance + '\n\n';
+      md += '**Pontos criticos:**\n' + r.pontos_criticos.map(function(p){return '- '+p;}).join('\n') + '\n\n';
+      md += '**Oportunidades:**\n' + r.oportunidades.map(function(p){return '- '+p;}).join('\n') + '\n\n';
+      md += '**Riscos:**\n' + r.riscos.map(function(p){return '- '+p;}).join('\n') + '\n\n';
+      md += '**Veredicto:** ' + r.veredicto + '\n\n---\n\n';
+    });
+    md += '## Sintese do conselho\n\n' + synth + '\n\n';
+    md += '---\nGerado automaticamente pelo Conselho SRM\n';
+
+    var sha = null;
+    var checkRes = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({target: 'github', method: 'GET', url: 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + encodeURIComponent(fileName)})
+    });
+    if(checkRes.ok){ var existing = await checkRes.json(); if(existing.sha) sha = existing.sha; }
+
+    var bodyObj = {message: 'Analise: ' + vertenteName + ' ' + dateStr, content: btoa(unescape(encodeURIComponent(md))), branch: GITHUB_BRANCH};
+    if(sha) bodyObj.sha = sha;
+    await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({target: 'github', method: 'PUT', url: 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + encodeURIComponent(fileName), payload: bodyObj})
+    });
+    showToast('Salvo no Obsidian vault');
+  } catch(e){
+    console.error('Erro ao salvar no vault:', e);
+  }
+}
+
 async function startAnalysis(){
   const selected=conselheiros.filter(c=>activeC.has(c.id));
   if(!selected.length){alert('Selecione ao menos um conselheiro.');return;}
@@ -794,7 +846,11 @@ async function startAnalysis(){
     catch(e){const el=document.getElementById('rc-'+c.id);if(el)el.querySelector('.r-body').innerHTML=`<div style="font-size:13px;color:#A32D2D">Erro: ${esc(e.message)}</div>`;}
   }));
   if(Object.keys(allR).length){
-    try{document.getElementById('synthOut').textContent=await callSynth(allR,names);}
+    try{
+      const synth = await callSynth(allR,names);
+      document.getElementById('synthOut').textContent = synth;
+      saveToObsidian(currentVertente, sources, allR, synth, names);
+    }
     catch(e){document.getElementById('synthOut').textContent='Erro ao gerar síntese.';}
   }else{document.getElementById('synthOut').textContent='Não foi possível gerar síntese.';}
 }
