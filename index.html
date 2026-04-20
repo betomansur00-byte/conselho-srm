@@ -521,11 +521,12 @@ function goToStep2(){
 
 // ── ANÁLISE ──
 async function callMember(c,allSources,vertente){
-  const sys=c.prompt+'\n\nRetorne APENAS JSON válido: {"pontos_criticos":["...","...","..."],"oportunidades":["...","..."],"riscos":["...","..."],"veredicto":"uma frase","stance":"positivo|negativo|cauteloso|neutro"}';
+  const vertenteNome = vertente ? vertente.nome : 'esta área';
+  const sys = `Você é ${c.nome}.\n\n${c.prompt}\n\nVocê está sendo consultado como conselheiro da vertente "${vertenteNome}". Entenda tudo que a vertente faz, pense e se coloque como conselheiro dela. Analise o caso apresentado e responda exatamente como essa pessoa responderia de verdade — com a visão, o vocabulário e os valores dela.\n\nRetorne APENAS JSON válido, sem texto fora do JSON:\n{"decisao":"faria|nao_faria|condicional","por_que":"raciocínio principal desta pessoa para a decisão","condicoes":"o que mudaria ou condicionaria a decisão","pontos_criticos":["...","...","..."],"oportunidades":["...","..."],"riscos":["...","..."],"veredicto":"uma frase direta como essa pessoa falaria","stance":"positivo|negativo|cauteloso|neutro"}`;
   const allText=[];
   if(vertente&&vertente.content) allText.push('[Contexto da vertente "'+vertente.nome+'"]\n'+vertente.content);
-  allSources.forEach(s=>allText.push('[Fonte de análise: '+s.label+']\n'+(s.content||'')));
-  allText.push('Analise todas as fontes acima com a sua perspectiva e retorne o JSON solicitado.');
+  allSources.forEach(s=>allText.push('[Caso para análise: '+s.label+']\n'+(s.content||'')));
+  allText.push('Analise o caso acima com a sua perspectiva e retorne o JSON solicitado.');
   const r=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:sys,messages:[{role:'user',content:allText.join('\n\n---\n\n')}]})});
   const d=await r.json();
@@ -561,6 +562,8 @@ function fillCard(c,data){
   const cor=CORES.find(x=>x.id===c.cor)||CORES[0];
   const bc=data.stance==='positivo'?'b-green':data.stance==='negativo'?'b-red':data.stance==='cauteloso'?'b-amber':'b-gray';
   const bl=data.stance==='positivo'?'Favorável':data.stance==='negativo'?'Contrário':data.stance==='cauteloso'?'Cauteloso':'Neutro';
+  const dl=data.decisao==='faria'?'✓ Faria':data.decisao==='nao_faria'?'✗ Não faria':'⚑ Condicional';
+  const dc=data.decisao==='faria'?'#3B6D11':data.decisao==='nao_faria'?'#A32D2D':'#854F0B';
   const el=document.getElementById(cardDomId(c));if(!el)return;
   el.innerHTML=`
     <div class="r-head">
@@ -569,9 +572,14 @@ function fillCard(c,data){
       <span class="r-badge ${bc}">${bl}</span>
     </div>
     <div class="r-body">
-      <div><div class="r-st">Pontos críticos</div><div class="r-pts">${data.pontos_criticos.map(x=>`<div class="r-pt">${esc(x)}</div>`).join('')}</div></div>
-      <div><div class="r-st">Oportunidades</div><div class="r-pts">${data.oportunidades.map(x=>`<div class="r-pt">${esc(x)}</div>`).join('')}</div></div>
-      <div><div class="r-st">Riscos</div><div class="r-pts">${data.riscos.map(x=>`<div class="r-pt">${esc(x)}</div>`).join('')}</div></div>
+      <div style="background:#fafaf8;border:.5px solid #e0ddd6;border-radius:8px;padding:11px 13px">
+        <div style="font-size:15px;font-weight:700;color:${dc};margin-bottom:6px">${dl}</div>
+        <div style="font-size:13px;color:#333;line-height:1.65">${esc(data.por_que||'')}</div>
+        ${data.condicoes?`<div style="font-size:12px;color:#888;margin-top:8px;padding-top:8px;border-top:.5px solid #e0ddd6"><span style="font-weight:600">Condições:</span> ${esc(data.condicoes)}</div>`:''}
+      </div>
+      ${data.pontos_criticos&&data.pontos_criticos.length?`<div><div class="r-st">Pontos críticos</div><div class="r-pts">${data.pontos_criticos.map(x=>`<div class="r-pt">${esc(x)}</div>`).join('')}</div></div>`:''}
+      ${data.oportunidades&&data.oportunidades.length?`<div><div class="r-st">Oportunidades</div><div class="r-pts">${data.oportunidades.map(x=>`<div class="r-pt">${esc(x)}</div>`).join('')}</div></div>`:''}
+      ${data.riscos&&data.riscos.length?`<div><div class="r-st">Riscos</div><div class="r-pts">${data.riscos.map(x=>`<div class="r-pt">${esc(x)}</div>`).join('')}</div></div>`:''}
       <div><div class="r-st">Veredicto</div><div class="r-vd">${esc(data.veredicto)}</div></div>
     </div>`;
 }
