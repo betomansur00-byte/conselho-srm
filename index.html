@@ -52,20 +52,6 @@ textarea{width:100%;border:none;outline:none;padding:13px 14px;font-size:13px;fo
 .btn-outline:hover{border-color:#bbb}
 .btn-row{display:flex;gap:10px;align-items:center;margin-top:1.5rem}
 
-.btn-add{background:#fff;border:.5px dashed #d0cdc6;border-radius:10px;padding:11px 16px;font-size:13px;color:#888;cursor:pointer;font-family:inherit;width:100%;display:flex;align-items:center;gap:8px;transition:all .15s}
-.btn-add:hover{border-color:#aaa;color:#1a1a1a;background:#fafaf8}
-.btn-add-plus{font-size:18px;color:#bbb;line-height:1}
-
-.btn-add-src{background:#fff;border:.5px solid #e0ddd6;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:500;color:#1a1a1a;cursor:pointer;font-family:inherit;width:100%;text-align:left;display:flex;align-items:center;gap:8px;margin-top:.75rem;transition:all .15s}
-.btn-add-src:hover{border-color:#aaa;background:#fafaf8}
-
-.create-card{background:#fff;border:.5px solid #e0ddd6;border-radius:12px;overflow:hidden;margin-bottom:1rem}
-.create-hd{padding:12px 16px;background:#fafaf8;border-bottom:.5px solid #e0ddd6;display:flex;align-items:center;justify-content:space-between}
-.create-hd-title{font-size:13px;font-weight:600}
-.close-btn{background:none;border:none;cursor:pointer;color:#bbb;font-size:20px;line-height:1;padding:0}
-.close-btn:hover{color:#1a1a1a}
-.create-body{padding:16px;display:flex;flex-direction:column;gap:12px}
-
 .select-row{display:flex;gap:10px;align-items:stretch;margin-bottom:1.5rem}
 .select-wrap{flex:1;position:relative}
 select.v-select{width:100%;appearance:none;-webkit-appearance:none;background:#fff;border:.5px solid #e0ddd6;border-radius:10px;padding:12px 40px 12px 14px;font-size:14px;font-family:inherit;color:#1a1a1a;cursor:pointer;outline:none}
@@ -75,7 +61,7 @@ select.v-select{width:100%;appearance:none;-webkit-appearance:none;background:#f
 
 .empty-state{text-align:center;padding:3rem 1rem;border:1px dashed #e0ddd6;border-radius:12px;background:#fff;margin-bottom:1.5rem}
 .empty-icon{font-size:24px;color:#ddd;margin-bottom:10px}
-.empty-txt{font-size:14px;color:#aaa}
+.empty-txt{font-size:14px;color:#aaa;line-height:1.7}
 
 .item-list{display:flex;flex-direction:column;gap:7px;margin-bottom:1.5rem}
 .item-card{background:#fff;border:.5px solid #e0ddd6;border-radius:10px;overflow:hidden}
@@ -83,17 +69,8 @@ select.v-select{width:100%;appearance:none;-webkit-appearance:none;background:#f
 .item-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .item-name{flex:1;font-size:13px;font-weight:600}
 .item-sub{font-size:11px;color:#bbb}
-.item-acts{display:flex;gap:5px}
-.item-btn{background:none;border:.5px solid #e0ddd6;border-radius:6px;font-size:11px;padding:4px 9px;cursor:pointer;color:#888;font-family:inherit;transition:all .15s}
-.item-btn:hover{border-color:#bbb;color:#1a1a1a}
-.item-btn.del:hover{border-color:#f09595;color:#A32D2D}
 .item-preview{border-top:.5px solid #e0ddd6;padding:10px 14px;background:#fafaf8;display:none}
 .item-preview-txt{font-size:12px;color:#888;line-height:1.6}
-
-/* COR OPTIONS */
-.cor-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.cor-opt{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0}
-.cor-opt.sel{border-color:#1a1a1a;transform:scale(1.2)}
 
 /* CONSELHEIROS */
 .c-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:1.5rem}
@@ -167,6 +144,9 @@ select.v-select{width:100%;appearance:none;-webkit-appearance:none;background:#f
 .loading-overlay.show{display:flex}
 .loading-box{background:#fff;border:.5px solid #e0ddd6;border-radius:12px;padding:24px 32px;display:flex;align-items:center;gap:14px;font-size:14px;color:#888}
 
+.btn-add-src{background:#fff;border:.5px solid #e0ddd6;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:500;color:#1a1a1a;cursor:pointer;font-family:inherit;width:100%;text-align:left;display:flex;align-items:center;gap:8px;margin-top:.75rem;transition:all .15s}
+.btn-add-src:hover{border-color:#aaa;background:#fafaf8}
+
 @media(max-width:580px){
   .c-grid{grid-template-columns:1fr}
   .app{padding:1.5rem 16px 3rem}
@@ -206,45 +186,8 @@ select.v-select{width:100%;appearance:none;-webkit-appearance:none;background:#f
   <!-- ═══ PANEL 0: VERTENTES ═══ -->
   <div class="panel active" id="panel0">
     <div class="panel-title">Vertente</div>
-    <div class="panel-sub">Escolha o contexto base para esta análise.</div>
-    <div id="vSelectArea"></div>
-    <div id="vCreateForm" style="display:none">
-      <div class="create-card">
-        <div class="create-hd">
-          <span class="create-hd-title">Nova vertente</span>
-          <button class="close-btn" onclick="toggleVCreate(false)">×</button>
-        </div>
-        <div class="create-body">
-          <div>
-            <div class="sec-label">Nome</div>
-            <input class="txt-input" id="vNameInput" placeholder="Ex: SRM Ventures, FIDC Imobiliário...">
-          </div>
-          <div>
-            <div class="sec-label">Contexto base</div>
-            <div class="prompt-box">
-              <div class="prompt-hd"><span>Descreva esta vertente</span><span class="char-count" id="vCharCount">0 caracteres</span></div>
-              <textarea id="vPromptText" rows="4" placeholder="Ex: A SRM Ventures é o braço de venture capital da SRM Asset..." oninput="updateVChar()"></textarea>
-            </div>
-          </div>
-          <div>
-            <div class="sec-label">PDFs de referência (opcional)</div>
-            <div class="pdf-drop" id="vPdfDrop">
-              <input type="file" id="vPdfInput" accept=".pdf" multiple onchange="handleVPdfs(event)">
-              <div class="pdf-icon">⊕</div>
-              <div class="pdf-title">Arraste PDFs de referência</div>
-              <div class="pdf-sub">Teses, políticas, manuais</div>
-            </div>
-            <div id="vPdfList" style="display:flex;flex-direction:column;gap:5px;margin-bottom:.5rem"></div>
-          </div>
-          <div class="btn-row" style="margin-top:0">
-            <button class="btn-primary" onclick="saveVertente()">Salvar vertente</button>
-            <button class="btn-outline" onclick="toggleVCreate(false)">Cancelar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="vListArea"></div>
-    <button class="btn-add" onclick="toggleVCreate(true)"><span class="btn-add-plus">+</span>Criar nova vertente</button>
+    <div class="panel-sub">Escolha o contexto base para esta análise. As vertentes são gerenciadas no Obsidian.</div>
+    <div id="vContent"></div>
   </div>
 
   <!-- ═══ PANEL 1: FONTES ═══ -->
@@ -277,50 +220,12 @@ select.v-select{width:100%;appearance:none;-webkit-appearance:none;background:#f
   <!-- ═══ PANEL 2: CONSELHEIROS ═══ -->
   <div class="panel" id="panel2">
     <div class="panel-title">Conselheiros</div>
-    <div class="panel-sub">Selecione quem vai analisar as fontes.</div>
+    <div class="panel-sub">Selecione quem vai analisar as fontes. Os conselheiros são gerenciados no Obsidian.</div>
     <div id="cGrid" class="c-grid"></div>
     <div id="cEmpty" style="display:none" class="empty-state">
       <div class="empty-icon">◎</div>
-      <div class="empty-txt">Nenhum conselheiro criado ainda.</div>
+      <div class="empty-txt">Nenhum conselheiro encontrado no vault.<br><br>Crie um arquivo <code>.md</code> dentro da pasta <strong>Conselheiros/</strong> no Obsidian com o frontmatter:<br><br><code>---<br>nome: Nome Aqui<br>empresa: Empresa<br>initials: XX<br>cor: blue<br>---</code></div>
     </div>
-    <div id="cCreateForm" style="display:none">
-      <div class="create-card">
-        <div class="create-hd">
-          <span class="create-hd-title">Novo conselheiro</span>
-          <button class="close-btn" onclick="toggleCCreate(false)">×</button>
-        </div>
-        <div class="create-body">
-          <div>
-            <div class="sec-label">Nome</div>
-            <input class="txt-input" id="cNome" placeholder="Ex: André Esteves, Jane Fraser...">
-          </div>
-          <div>
-            <div class="sec-label">Empresa / cargo</div>
-            <input class="txt-input" id="cEmpresa" placeholder="Ex: BTG Pactual · M&A e mercados">
-          </div>
-          <div>
-            <div class="sec-label">Iniciais (2 letras)</div>
-            <input class="txt-input" id="cInitials" placeholder="Ex: AE" maxlength="3" style="width:80px">
-          </div>
-          <div>
-            <div class="sec-label" style="margin-bottom:8px">Cor do avatar</div>
-            <div class="cor-row" id="corRow"></div>
-          </div>
-          <div>
-            <div class="sec-label">Prompt — como ele pensa e analisa</div>
-            <div class="prompt-box" style="margin-bottom:0">
-              <div class="prompt-hd"><span>Personalidade e foco de análise</span><span class="char-count" id="cCharCount">0 caracteres</span></div>
-              <textarea id="cPrompt" rows="5" placeholder="Ex: Você é André Esteves, fundador do BTG Pactual. Analise as fontes com foco em oportunidades de negócio, timing de mercado e alavancagem inteligente. Seja direto e oportunista..." oninput="updateCChar()"></textarea>
-            </div>
-          </div>
-          <div class="btn-row" style="margin-top:0">
-            <button class="btn-primary" onclick="saveConselheiro()">Salvar conselheiro</button>
-            <button class="btn-outline" onclick="toggleCCreate(false)">Cancelar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button class="btn-add" id="btnAddC" onclick="toggleCCreate(true)"><span class="btn-add-plus">+</span>Adicionar conselheiro</button>
     <div class="btn-row" id="cNavBtns" style="display:none">
       <button class="btn-outline" onclick="goTo(1)">← Voltar</button>
       <button class="btn-primary" onclick="startAnalysis()">Analisar →</button>
@@ -346,21 +251,19 @@ select.v-select{width:100%;appearance:none;-webkit-appearance:none;background:#f
 // ═══════════════════════════════════════════
 //  CONFIG
 // ═══════════════════════════════════════════
-const SUPABASE_URL = 'https://brkdicumdlfhfajoucov.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJya2RpY3VtZGxmaGZham91Y292Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NjY2MzAsImV4cCI6MjA5MTE0MjYzMH0.SEhjYAJ61EGWjKIjBm3HYUx3DesDUd0xsRxhBjliF7Q';
 const PROXY_URL = 'https://conselho-srm.vercel.app/api/proxy';
 const GITHUB_REPO = 'betomansur00-byte/conselho-srm-vault';
 const GITHUB_BRANCH = 'main';
 
 const CORES = [
-  {id:'blue', bg:'#B5D4F4', txt:'#0C447C'},
-  {id:'green', bg:'#9FE1CB', txt:'#085041'},
-  {id:'amber', bg:'#FAC775', txt:'#633806'},
-  {id:'pink', bg:'#F4C0D1', txt:'#72243E'},
+  {id:'blue',   bg:'#B5D4F4', txt:'#0C447C'},
+  {id:'green',  bg:'#9FE1CB', txt:'#085041'},
+  {id:'amber',  bg:'#FAC775', txt:'#633806'},
+  {id:'pink',   bg:'#F4C0D1', txt:'#72243E'},
   {id:'purple', bg:'#CECBF6', txt:'#3C3489'},
-  {id:'coral', bg:'#F5C4B3', txt:'#993C1D'},
-  {id:'gray', bg:'#D3D1C7', txt:'#444441'},
-  {id:'teal', bg:'#5DCAA5', txt:'#04342C'},
+  {id:'coral',  bg:'#F5C4B3', txt:'#993C1D'},
+  {id:'gray',   bg:'#D3D1C7', txt:'#444441'},
+  {id:'teal',   bg:'#5DCAA5', txt:'#04342C'},
 ];
 
 // ═══════════════════════════════════════════
@@ -370,11 +273,9 @@ let vertentes = [];
 let conselheiros = [];
 let activeC = new Set();
 let currentVertente = null;
-let selectedCor = 'blue';
 let sources = [];
 let srcCounter = 0;
 window._pendingPdfs = [];
-window._vPendingPdfs = [];
 
 // ═══════════════════════════════════════════
 //  UTILS
@@ -383,8 +284,6 @@ function dots(){return '<div class="dots"><div class="dot"></div><div class="dot
 function fmtSz(b){return b>1048576?(b/1048576).toFixed(1)+' MB':(b/1024).toFixed(0)+' KB';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function updateChar(){document.getElementById('charCount').textContent=document.getElementById('promptText').value.length.toLocaleString('pt-BR')+' caracteres';}
-function updateVChar(){document.getElementById('vCharCount').textContent=document.getElementById('vPromptText').value.length.toLocaleString('pt-BR')+' caracteres';}
-function updateCChar(){document.getElementById('cCharCount').textContent=document.getElementById('cPrompt').value.length.toLocaleString('pt-BR')+' caracteres';}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 function showLoading(msg='Carregando...'){document.getElementById('loadingMsg').textContent=msg;document.getElementById('loadingOverlay').classList.add('show');}
 function hideLoading(){document.getElementById('loadingOverlay').classList.remove('show');}
@@ -400,28 +299,191 @@ function goTo(n){
 }
 
 // ═══════════════════════════════════════════
-//  SUPABASE
+//  GITHUB — buscar arquivos do vault
 // ═══════════════════════════════════════════
-const SB = {
-  h:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
-  async get(table,order='created_at.asc'){
-    const r=await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*&order=${order}`,{headers:this.h});
-    if(!r.ok)throw new Error('Erro ao buscar '+table);
-    return r.json();
-  },
-  async insert(table,data){
-    const r=await fetch(`${SUPABASE_URL}/rest/v1/${table}`,{method:'POST',headers:{...this.h,'Prefer':'return=representation'},body:JSON.stringify(data)});
-    if(!r.ok){const e=await r.json();throw new Error(e.message||'Erro ao salvar');}
-    const d=await r.json();return d[0];
-  },
-  async del(table,id){
-    const r=await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`,{method:'DELETE',headers:this.h});
-    if(!r.ok)throw new Error('Erro ao deletar');
+async function githubGet(url) {
+  const r = await fetch(PROXY_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({target: 'github', method: 'GET', url})
+  });
+  if (!r.ok) throw new Error('Erro GitHub');
+  return r.json();
+}
+
+async function listFolder(folder) {
+  try {
+    const data = await githubGet(`https://api.github.com/repos/${GITHUB_REPO}/contents/${folder}?ref=${GITHUB_BRANCH}`);
+    return Array.isArray(data) ? data.filter(f => f.name.endsWith('.md')) : [];
+  } catch(e) {
+    return [];
   }
-};
+}
+
+async function getFileContent(path) {
+  const data = await githubGet(`https://api.github.com/repos/${GITHUB_REPO}/contents/${encodeURIComponent(path)}?ref=${GITHUB_BRANCH}`);
+  return decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+}
 
 // ═══════════════════════════════════════════
-//  PDF EXTRACTION
+//  PARSE FRONTMATTER
+// ═══════════════════════════════════════════
+function parseMd(raw) {
+  const meta = {};
+  let body = raw;
+  const fm = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if (fm) {
+    fm[1].split('\n').forEach(line => {
+      const m = line.match(/^(\w+):\s*(.+)$/);
+      if (m) meta[m[1].trim()] = m[2].trim();
+    });
+    body = fm[2].trim();
+  }
+  return {meta, body};
+}
+
+// ═══════════════════════════════════════════
+//  CARREGAR TUDO DO VAULT
+// ═══════════════════════════════════════════
+async function loadAll() {
+  showLoading('Carregando vault...');
+  try {
+    const [vFiles, cFiles] = await Promise.all([
+      listFolder('Vertentes'),
+      listFolder('Conselheiros')
+    ]);
+
+    // Carregar vertentes
+    const vResults = await Promise.all(vFiles.map(async f => {
+      try {
+        const raw = await getFileContent(f.path);
+        const {meta, body} = parseMd(raw);
+        if (!meta.nome) return null;
+        return {path: f.path, nome: meta.nome, body};
+      } catch(e) { return null; }
+    }));
+    vertentes = vResults.filter(Boolean);
+
+    // Carregar conselheiros
+    const cResults = await Promise.all(cFiles.map(async f => {
+      try {
+        const raw = await getFileContent(f.path);
+        const {meta, body} = parseMd(raw);
+        if (!meta.nome) return null;
+        const initials = meta.initials || meta.nome.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
+        return {
+          path: f.path,
+          id: f.path, // usa o path como id único
+          nome: meta.nome,
+          empresa: meta.empresa || '',
+          initials,
+          cor: meta.cor || 'blue',
+          prompt: body // TODO corpo inteiro do .md é o cérebro
+        };
+      } catch(e) { return null; }
+    }));
+    conselheiros = cResults.filter(Boolean);
+    activeC = new Set(conselheiros.map(c => c.id));
+
+    renderVertentePanel();
+  } catch(e) {
+    showToast('Erro ao carregar vault');
+    console.error(e);
+  } finally {
+    hideLoading();
+  }
+}
+
+// ═══════════════════════════════════════════
+//  VERTENTES
+// ═══════════════════════════════════════════
+function renderVertentePanel() {
+  const el = document.getElementById('vContent');
+  if (!vertentes.length) {
+    el.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">◎</div>
+      <div class="empty-txt">Nenhuma vertente encontrada no vault.<br><br>Crie um arquivo <code>.md</code> dentro da pasta <strong>Vertentes/</strong> no Obsidian com o frontmatter:<br><br><code>---<br>nome: Nome da Vertente<br>---</code></div>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="sec-label">Selecionar vertente</div>
+    <div class="select-row">
+      <div class="select-wrap">
+        <select class="v-select" id="vSelect">
+          ${vertentes.map((v,i) => `<option value="${i}">${esc(v.nome)}</option>`).join('')}
+        </select>
+        <span class="select-arrow">▾</span>
+      </div>
+      <button class="btn-use" onclick="useVertente()">Usar esta vertente →</button>
+    </div>
+    <div class="sec-label" style="margin-top:1.5rem">Vertentes disponíveis</div>
+    <div class="item-list">
+      ${vertentes.map((v,i) => `
+        <div class="item-card">
+          <div class="item-head">
+            <div class="item-dot" style="background:#3B6D11"></div>
+            <div class="item-name">${esc(v.nome)}</div>
+            <div class="item-sub">${v.body ? v.body.length.toLocaleString('pt-BR') + ' caracteres' : 'sem conteúdo'}</div>
+            ${v.body ? `<button class="src-btn" onclick="togglePreview('vp-${i}')">Ver</button>` : ''}
+          </div>
+          ${v.body ? `<div class="item-preview" id="vp-${i}"><div class="item-preview-txt">${esc(v.body.slice(0,300))}${v.body.length>300?'…':''}</div></div>` : ''}
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+function togglePreview(id){const el=document.getElementById(id);if(el)el.style.display=el.style.display==='block'?'none':'block';}
+
+function useVertente() {
+  const sel = document.getElementById('vSelect');
+  if (!sel) return;
+  const v = vertentes[parseInt(sel.value)];
+  if (!v) return;
+  currentVertente = v;
+  document.getElementById('topbarV').textContent = v.nome;
+  document.getElementById('topbarV').style.display = 'block';
+  document.getElementById('panel1Sub').textContent = `Vertente: ${v.nome} · Adicione fontes específicas para esta análise.`;
+  sources = []; srcCounter = 0; window._pendingPdfs = [];
+  document.getElementById('promptText').value = ''; updateChar(); renderSources();
+  resetDrop('pdfDrop','pdfInput',handlePDFs);
+  goTo(1);
+}
+
+// ═══════════════════════════════════════════
+//  CONSELHEIROS
+// ═══════════════════════════════════════════
+function renderConselheirosPanel() {
+  const grid = document.getElementById('cGrid');
+  const empty = document.getElementById('cEmpty');
+  const nav = document.getElementById('cNavBtns');
+  if (!conselheiros.length) {
+    grid.innerHTML = ''; empty.style.display = 'block'; nav.style.display = 'none'; return;
+  }
+  empty.style.display = 'none'; nav.style.display = 'flex';
+  grid.innerHTML = conselheiros.map(c => {
+    const cor = corById(c.cor);
+    const on = activeC.has(c.id);
+    return `<div class="c-card ${on?'on':'off'}" data-id="${esc(c.id)}" onclick="toggleC(this)">
+      <div class="c-av" style="background:${cor.bg};color:${cor.txt}">${esc(c.initials)}</div>
+      <div style="min-width:0;flex:1">
+        <div class="c-name">${esc(c.nome)}</div>
+        <div class="c-empresa">${esc(c.empresa)}</div>
+        <div class="c-preview">${esc(c.prompt.slice(0,120))}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleC(el) {
+  const id = el.dataset.id;
+  if (activeC.has(id)) {if(activeC.size===1)return; activeC.delete(id); el.className='c-card off';}
+  else {activeC.add(id); el.className='c-card on';}
+}
+
+// ═══════════════════════════════════════════
+//  PDF
 // ═══════════════════════════════════════════
 async function extractPdfText(file){
   pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -436,190 +498,6 @@ async function extractPdfText(file){
   return text.trim();
 }
 
-// ═══════════════════════════════════════════
-//  VERTENTES
-// ═══════════════════════════════════════════
-async function loadAll(){
-  showLoading('Carregando...');
-  try{
-    [vertentes, conselheiros] = await Promise.all([SB.get('vertentes'), SB.get('conselheiros')]);
-    activeC = new Set(conselheiros.map(c=>c.id));
-    renderVertentePanel();
-  }catch(e){showToast('Erro ao conectar ao banco de dados');}
-  finally{hideLoading();}
-}
-
-function renderVertentePanel(){
-  const sa=document.getElementById('vSelectArea');
-  const la=document.getElementById('vListArea');
-  if(!vertentes.length){
-    sa.innerHTML=`<div class="empty-state"><div class="empty-icon">◎</div><div class="empty-txt">Nenhuma vertente criada ainda.<br>Crie a primeira abaixo.</div></div>`;
-    la.innerHTML='';return;
-  }
-  sa.innerHTML=`
-    <div class="sec-label">Selecionar vertente</div>
-    <div class="select-row">
-      <div class="select-wrap"><select class="v-select" id="vSelect">${vertentes.map(v=>`<option value="${v.id}">${esc(v.name)}</option>`).join('')}</select><span class="select-arrow">▾</span></div>
-      <button class="btn-use" onclick="useVertente()">Usar esta vertente →</button>
-    </div>`;
-  la.innerHTML=`
-    <div class="sec-label" style="margin-top:1.5rem">Vertentes salvas</div>
-    <div class="item-list">${vertentes.map(v=>{
-      const srcs=v.sources||[];
-      const nT=srcs.filter(s=>s.type==='text').length,nP=srcs.filter(s=>s.type==='pdf').length;
-      const parts=[];if(nT)parts.push(nT+' texto'+(nT>1?'s':''));if(nP)parts.push(nP+' PDF'+(nP>1?'s':''));
-      const prev=srcs.find(s=>s.type==='text');
-      return `<div class="item-card"><div class="item-head">
-        <div class="item-dot" style="background:#3B6D11"></div>
-        <div class="item-name">${esc(v.name)}</div>
-        <div class="item-sub">${parts.join(' · ')||'sem fontes'}</div>
-        <div class="item-acts">
-          ${prev?`<button class="item-btn" onclick="togglePreview('vp-${v.id}')">Ver</button>`:''}
-          <button class="item-btn del" onclick="deleteVertente(${v.id})">Remover</button>
-        </div>
-      </div>${prev?`<div class="item-preview" id="vp-${v.id}"><div class="item-preview-txt">${esc((prev.content||'').slice(0,300))}${(prev.content||'').length>300?'…':''}</div></div>`:''}</div>`;
-    }).join('')}</div>`;
-}
-
-function togglePreview(id){const el=document.getElementById(id);if(el)el.style.display=el.style.display==='block'?'none':'block';}
-
-function useVertente(){
-  const sel=document.getElementById('vSelect');if(!sel)return;
-  const v=vertentes.find(x=>String(x.id)===String(sel.value));if(!v)return;
-  currentVertente=v;
-  document.getElementById('topbarV').textContent=v.name;
-  document.getElementById('topbarV').style.display='block';
-  document.getElementById('panel1Sub').textContent=`Vertente: ${v.name} · Adicione fontes específicas para esta análise.`;
-  sources=[];srcCounter=0;window._pendingPdfs=[];
-  document.getElementById('promptText').value='';updateChar();renderSources();
-  resetDrop('pdfDrop','pdfInput',handlePDFs);
-  goTo(1);
-}
-
-async function deleteVertente(id){
-  if(!confirm('Remover esta vertente para todos os usuários?'))return;
-  showLoading('Removendo...');
-  try{await SB.del('vertentes',id);vertentes=vertentes.filter(v=>v.id!==id);renderVertentePanel();showToast('Vertente removida');}
-  catch(e){showToast('Erro ao remover');}finally{hideLoading();}
-}
-
-function toggleVCreate(show){
-  document.getElementById('vCreateForm').style.display=show?'block':'none';
-  if(show){
-    document.getElementById('vNameInput').value='';
-    document.getElementById('vPromptText').value='';updateVChar();
-    window._vPendingPdfs=[];document.getElementById('vPdfList').innerHTML='';
-    resetDrop('vPdfDrop','vPdfInput',handleVPdfs);
-    setTimeout(()=>document.getElementById('vNameInput').focus(),50);
-  }
-}
-
-async function saveVertente(){
-  const name=document.getElementById('vNameInput').value.trim();
-  if(!name){alert('Dê um nome para a vertente.');return;}
-  const text=document.getElementById('vPromptText').value.trim();
-  const pdfs=(window._vPendingPdfs||[]).filter(f=>f.status==='ok');
-  if(!text&&!pdfs.length){alert('Adicione ao menos um texto ou PDF.');return;}
-  const vsources=[];
-  if(text)vsources.push({id:1,type:'text',label:text.slice(0,60)+(text.length>60?'…':''),content:text,status:'ok'});
-  pdfs.forEach((f,i)=>vsources.push({id:i+2,type:'pdf',label:f.name,content:'[PDF: '+f.name+']\n'+(f.text||''),size:f.size,status:'ok'}));
-  showLoading('Salvando vertente...');
-  try{
-    const saved=await SB.insert('vertentes',{name,sources:vsources});
-    saved.sources=vsources;vertentes.push(saved);
-    toggleVCreate(false);renderVertentePanel();showToast('Vertente "'+name+'" salva');
-  }catch(e){showToast('Erro: '+e.message);}finally{hideLoading();}
-}
-
-// vertente PDFs
-function handleVPdfs(e){
-  Array.from(e.target.files).forEach(async f=>{
-    if((window._vPendingPdfs||[]).find(p=>p.name===f.name))return;
-    const entry={name:f.name,size:f.size,text:null,status:'loading'};
-    window._vPendingPdfs.push(entry);renderVPdfList();
-    try{entry.text=await extractPdfText(f);entry.status='ok';}catch(err){entry.status='err';}
-    renderVPdfList();
-  });
-  document.getElementById('vPdfInput').value='';
-}
-function renderVPdfList(){
-  document.getElementById('vPdfList').innerHTML=(window._vPendingPdfs||[]).map(f=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:#fff;border:.5px solid #e0ddd6;border-radius:7px;font-size:12px">
-      <span style="background:#FCEBEB;color:#A32D2D;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px">PDF</span>
-      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.name)}</span>
-      <span style="color:#bbb">${fmtSz(f.size)}</span>
-      <span style="color:${f.status==='ok'?'#3B6D11':'#888'};font-weight:500">${f.status==='ok'?'Pronto':f.status==='loading'?'...':'Erro'}</span>
-    </div>`).join('');
-}
-
-// ═══════════════════════════════════════════
-//  CONSELHEIROS
-// ═══════════════════════════════════════════
-function renderConselheirosPanel(){
-  const grid=document.getElementById('cGrid');
-  const empty=document.getElementById('cEmpty');
-  const nav=document.getElementById('cNavBtns');
-  if(!conselheiros.length){
-    grid.innerHTML='';empty.style.display='block';nav.style.display='none';return;
-  }
-  empty.style.display='none';nav.style.display='flex';
-  grid.innerHTML=conselheiros.map(c=>{
-    const cor=corById(c.cor);
-    const on=activeC.has(c.id);
-    return `<div class="c-card ${on?'on':'off'}" data-id="${c.id}" onclick="toggleC(this)">
-      <div class="c-av" style="background:${cor.bg};color:${cor.txt}">${esc(c.initials)}</div>
-      <div style="min-width:0;flex:1">
-        <div class="c-name">${esc(c.nome)}</div>
-        <div class="c-empresa">${esc(c.empresa)}</div>
-        <div class="c-preview">${esc(c.prompt)}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function toggleC(el){
-  const id=Number(el.dataset.id);
-  if(activeC.has(id)){if(activeC.size===1)return;activeC.delete(id);el.className='c-card off';el.dataset.id=id;}
-  else{activeC.add(id);el.className='c-card on';el.dataset.id=id;}
-}
-
-function toggleCCreate(show){
-  document.getElementById('cCreateForm').style.display=show?'block':'none';
-  if(show){
-    document.getElementById('cNome').value='';
-    document.getElementById('cEmpresa').value='';
-    document.getElementById('cInitials').value='';
-    document.getElementById('cPrompt').value='';updateCChar();
-    selectedCor='blue';renderCorOptions();
-    setTimeout(()=>document.getElementById('cNome').focus(),50);
-  }
-}
-
-function renderCorOptions(){
-  document.getElementById('corRow').innerHTML=CORES.map(c=>`
-    <div class="cor-opt${selectedCor===c.id?' sel':''}" style="background:${c.bg};border-color:${selectedCor===c.id?c.txt:'transparent'}" onclick="selectCor('${c.id}')"></div>
-  `).join('');
-}
-
-function selectCor(id){selectedCor=id;renderCorOptions();}
-
-async function saveConselheiro(){
-  const nome=document.getElementById('cNome').value.trim();
-  const empresa=document.getElementById('cEmpresa').value.trim();
-  const initials=document.getElementById('cInitials').value.trim().toUpperCase().slice(0,3);
-  const prompt=document.getElementById('cPrompt').value.trim();
-  if(!nome||!empresa||!initials||!prompt){alert('Preencha todos os campos.');return;}
-  showLoading('Salvando conselheiro...');
-  try{
-    const saved=await SB.insert('conselheiros',{nome,empresa,initials,prompt,cor:selectedCor});
-    conselheiros.push(saved);activeC.add(saved.id);
-    toggleCCreate(false);renderConselheirosPanel();showToast('"'+nome+'" adicionado ao conselho');
-  }catch(e){showToast('Erro: '+e.message);}finally{hideLoading();}
-}
-
-// ═══════════════════════════════════════════
-//  PDF DROP GENERIC
-// ═══════════════════════════════════════════
 function resetDrop(dropId, inputId, handler){
   const d=document.getElementById(dropId);if(!d)return;
   d.className='pdf-drop';
@@ -631,7 +509,6 @@ function resetDrop(dropId, inputId, handler){
   d.addEventListener('drop',e=>{e.preventDefault();d.classList.remove('drag');handler({target:{files:e.dataTransfer.files}});});
 }
 
-// session PDFs
 function handlePDFs(e){
   Array.from(e.target.files).forEach(async f=>{
     if((window._pendingPdfs||[]).find(p=>p.name===f.name))return;
@@ -720,8 +597,7 @@ async function callMember(c, allSources, vertente){
   const sys = c.prompt + '\n\nRetorne APENAS JSON válido: {"pontos_criticos":["...","...","..."],"oportunidades":["...","..."],"riscos":["...","..."],"veredicto":"uma frase","stance":"positivo|negativo|cauteloso|neutro"}';
   const allText=[];
   if(vertente){
-    const srcs=vertente.sources||[];
-    srcs.forEach(s=>allText.push('[Contexto da vertente "'+vertente.name+'"]\n'+(s.content||'')));
+    allText.push('[Contexto da vertente "'+vertente.nome+'"]\n'+(vertente.body||''));
   }
   allSources.forEach(s=>allText.push('[Fonte de análise: '+s.label+']\n'+(s.content||'')));
   allText.push('Analise todas as fontes acima com a sua perspectiva e retorne o JSON solicitado.');
@@ -752,16 +628,20 @@ async function callSynth(results, names){
 function mkLoading(c){
   const cor=corById(c.cor);
   const el=document.createElement('div');
-  el.className='r-card';el.id='rc-'+c.id;
+  el.className='r-card';el.id='rc-'+btoa(c.id).replace(/=/g,'');
   el.innerHTML=`<div class="r-head"><div class="r-av" style="background:${cor.bg};color:${cor.txt}">${esc(c.initials)}</div><div class="r-meta"><div class="r-name">${esc(c.nome)}</div><div class="r-role-sm">${esc(c.empresa)}</div></div></div><div class="r-body">${dots()}</div>`;
   return el;
 }
+
+function cardId(c){ return 'rc-'+btoa(c.id).replace(/=/g,''); }
 
 function fillCard(c,data){
   const cor=corById(c.cor);
   const bc=data.stance==='positivo'?'b-green':data.stance==='negativo'?'b-red':data.stance==='cauteloso'?'b-amber':'b-gray';
   const bl=data.stance==='positivo'?'Favorável':data.stance==='negativo'?'Contrário':data.stance==='cauteloso'?'Cauteloso':'Neutro';
-  document.getElementById('rc-'+c.id).innerHTML=`
+  const el=document.getElementById(cardId(c));
+  if(!el)return;
+  el.innerHTML=`
     <div class="r-head">
       <div class="r-av" style="background:${cor.bg};color:${cor.txt}">${esc(c.initials)}</div>
       <div class="r-meta"><div class="r-name">${esc(c.nome)}</div><div class="r-role-sm">${esc(c.empresa)}</div></div>
@@ -776,53 +656,44 @@ function fillCard(c,data){
 }
 
 // ═══════════════════════════════════════════
-//  OBSIDIAN VAULT (GitHub)
+//  OBSIDIAN VAULT — salvar análise
 // ═══════════════════════════════════════════
 async function saveToObsidian(vertente, srcs, results, synth, names){
   try{
-    const now = new Date();
-    const dateStr = now.toISOString().slice(0,10);
-    const timeStr = now.toTimeString().slice(0,5).replace(':','h');
-    const vertenteName = vertente ? vertente.name : 'Geral';
-    const fileName = 'Analises/' + dateStr + ' ' + timeStr + ' - ' + vertenteName + '.md';
-    let md = '# ' + vertenteName + ' - ' + dateStr + ' ' + timeStr + '\n\n';
-    md += '**Vertente:** ' + vertenteName + '\n';
-    md += '**Data:** ' + now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR') + '\n\n';
-    md += '## Fontes\n\n';
-    srcs.forEach(function(s){ md += '- **' + (s.type==='pdf'?'PDF':'Texto') + ':** ' + s.label + '\n'; });
-    md += '\n## Analise dos conselheiros\n\n';
-    Object.entries(results).forEach(function(entry){
-      var id = entry[0]; var r = entry[1];
-      var stance = r.stance==='positivo'?'Favoravel':r.stance==='negativo'?'Contrario':r.stance==='cauteloso'?'Cauteloso':'Neutro';
-      md += '### ' + names[id] + '\n\n';
-      md += '**Posicao:** ' + stance + '\n\n';
-      md += '**Pontos criticos:**\n' + r.pontos_criticos.map(function(p){return '- '+p;}).join('\n') + '\n\n';
-      md += '**Oportunidades:**\n' + r.oportunidades.map(function(p){return '- '+p;}).join('\n') + '\n\n';
-      md += '**Riscos:**\n' + r.riscos.map(function(p){return '- '+p;}).join('\n') + '\n\n';
-      md += '**Veredicto:** ' + r.veredicto + '\n\n---\n\n';
+    const now=new Date();
+    const dateStr=now.toISOString().slice(0,10);
+    const timeStr=now.toTimeString().slice(0,5).replace(':','h');
+    const vertenteName=vertente?vertente.nome:'Geral';
+    const fileName='Analises/'+dateStr+' '+timeStr+' - '+vertenteName+'.md';
+    let md='# '+vertenteName+' - '+dateStr+' '+timeStr+'\n\n';
+    md+='**Vertente:** '+vertenteName+'\n';
+    md+='**Data:** '+now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR')+'\n\n';
+    md+='## Fontes\n\n';
+    srcs.forEach(s=>{md+='- **'+(s.type==='pdf'?'PDF':'Texto')+':** '+s.label+'\n';});
+    md+='\n## Análise dos conselheiros\n\n';
+    Object.entries(results).forEach(([id,r])=>{
+      const stance=r.stance==='positivo'?'Favorável':r.stance==='negativo'?'Contrário':r.stance==='cauteloso'?'Cauteloso':'Neutro';
+      md+='### '+names[id]+'\n\n';
+      md+='**Posição:** '+stance+'\n\n';
+      md+='**Pontos críticos:**\n'+r.pontos_criticos.map(p=>'- '+p).join('\n')+'\n\n';
+      md+='**Oportunidades:**\n'+r.oportunidades.map(p=>'- '+p).join('\n')+'\n\n';
+      md+='**Riscos:**\n'+r.riscos.map(p=>'- '+p).join('\n')+'\n\n';
+      md+='**Veredicto:** '+r.veredicto+'\n\n---\n\n';
     });
-    md += '## Sintese do conselho\n\n' + synth + '\n\n';
-    md += '---\nGerado automaticamente pelo Conselho SRM\n';
+    md+='## Síntese do conselho\n\n'+synth+'\n\n';
+    md+='---\nGerado automaticamente pelo Conselho SRM\n';
 
-    var sha = null;
-    var checkRes = await fetch(PROXY_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({target: 'github', method: 'GET', url: 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + encodeURIComponent(fileName)})
-    });
-    if(checkRes.ok){ var existing = await checkRes.json(); if(existing.sha) sha = existing.sha; }
+    let sha=null;
+    try{
+      const check=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target:'github',method:'GET',url:'https://api.github.com/repos/'+GITHUB_REPO+'/contents/'+encodeURIComponent(fileName)})});
+      if(check.ok){const ex=await check.json();if(ex.sha)sha=ex.sha;}
+    }catch(e){}
 
-    var bodyObj = {message: 'Analise: ' + vertenteName + ' ' + dateStr, content: btoa(unescape(encodeURIComponent(md))), branch: GITHUB_BRANCH};
-    if(sha) bodyObj.sha = sha;
-    await fetch(PROXY_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({target: 'github', method: 'PUT', url: 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + encodeURIComponent(fileName), payload: bodyObj})
-    });
+    const bodyObj={message:'Análise: '+vertenteName+' '+dateStr,content:btoa(unescape(encodeURIComponent(md))),branch:GITHUB_BRANCH};
+    if(sha)bodyObj.sha=sha;
+    await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target:'github',method:'PUT',url:'https://api.github.com/repos/'+GITHUB_REPO+'/contents/'+encodeURIComponent(fileName),payload:bodyObj})});
     showToast('Salvo no Obsidian vault');
-  } catch(e){
-    console.error('Erro ao salvar no vault:', e);
-  }
+  }catch(e){console.error('Erro ao salvar no vault:',e);}
 }
 
 async function startAnalysis(){
@@ -831,7 +702,7 @@ async function startAnalysis(){
   goTo(3);
   const n=sources.length,nT=sources.filter(s=>s.type==='text').length,nP=sources.filter(s=>s.type==='pdf').length;
   const parts=[];if(nT)parts.push(nT+' texto'+(nT>1?'s':''));if(nP)parts.push(nP+' PDF'+(nP>1?'s':''));
-  document.getElementById('resVPill').innerHTML=currentVertente?`<span class="res-v-pill">${esc(currentVertente.name)}</span>`:'';
+  document.getElementById('resVPill').innerHTML=currentVertente?`<span class="res-v-pill">${esc(currentVertente.nome)}</span>`:'';
   document.getElementById('resPrompt').textContent=n+' fonte'+(n>1?'s':'')+' · '+parts.join(', ');
   document.getElementById('srcPills').innerHTML=sources.map(s=>`<span class="src-pill">${esc(s.label)}</span>`).join('');
   const container=document.getElementById('rCards');container.innerHTML='';
@@ -843,25 +714,20 @@ async function startAnalysis(){
   await Promise.all(selected.map(async c=>{
     names[c.id]=c.nome;
     try{const d=await callMember(c,sources,currentVertente);allR[c.id]=d;fillCard(c,d);}
-    catch(e){const el=document.getElementById('rc-'+c.id);if(el)el.querySelector('.r-body').innerHTML=`<div style="font-size:13px;color:#A32D2D">Erro: ${esc(e.message)}</div>`;}
+    catch(e){const el=document.getElementById(cardId(c));if(el)el.querySelector('.r-body').innerHTML=`<div style="font-size:13px;color:#A32D2D">Erro: ${esc(e.message)}</div>`;}
   }));
   if(Object.keys(allR).length){
     try{
-      const synth = await callSynth(allR,names);
-      document.getElementById('synthOut').textContent = synth;
-      saveToObsidian(currentVertente, sources, allR, synth, names);
-    }
-    catch(e){document.getElementById('synthOut').textContent='Erro ao gerar síntese.';}
+      const synth=await callSynth(allR,names);
+      document.getElementById('synthOut').textContent=synth;
+      saveToObsidian(currentVertente,sources,allR,synth,names);
+    }catch(e){document.getElementById('synthOut').textContent='Erro ao gerar síntese.';}
   }else{document.getElementById('synthOut').textContent='Não foi possível gerar síntese.';}
 }
 
 // ═══════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════
-renderCorOptions();
-setupPdfDrop();
-loadAll();
-
 function setupPdfDrop(){
   const d=document.getElementById('pdfDrop');
   d.addEventListener('dragover',e=>{e.preventDefault();d.classList.add('drag')});
@@ -870,13 +736,8 @@ function setupPdfDrop(){
   document.getElementById('pdfInput').onchange=e=>handlePDFs(e);
 }
 
-function setupVPdfDrop(){
-  const d=document.getElementById('vPdfDrop');if(!d)return;
-  d.addEventListener('dragover',e=>{e.preventDefault();d.classList.add('drag')});
-  d.addEventListener('dragleave',()=>d.classList.remove('drag'));
-  d.addEventListener('drop',e=>{e.preventDefault();d.classList.remove('drag');handleVPdfs({target:{files:e.dataTransfer.files}});});
-}
-setTimeout(setupVPdfDrop,100);
+setupPdfDrop();
+loadAll();
 </script>
 </body>
 </html>
